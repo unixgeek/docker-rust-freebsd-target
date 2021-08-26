@@ -1,11 +1,12 @@
-FROM debian:buster-slim
-
-ENV PATH=/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+FROM debian:bullseye-slim
 
 ARG ARCH=x86_64
+ARG RUST_RELEASE=1.54.0
 
-COPY cross-compile-setup.sh /root
+COPY cross-compile-setup.sh /tmp
 
-RUN /root/cross-compile-setup.sh ${ARCH}
+RUN /tmp/cross-compile-setup.sh ${ARCH}
 
+USER rust
+ENV PATH=/home/rust/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CMD ["/bin/sh"]
