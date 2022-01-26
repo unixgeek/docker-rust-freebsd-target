@@ -1,7 +1,7 @@
 FROM debian:bullseye-slim
 
 ARG ARCH=x86_64
-ARG RUST_RELEASE=1.54.0
+ARG RUST_RELEASE=1.58.1
 
 COPY cross-compile-setup.sh /tmp
 

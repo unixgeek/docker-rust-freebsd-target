@@ -9,18 +9,25 @@ This docker image is used to cross compile Rust code, targeting FreeBSD.
 2. Setup cross compile environment. If your project requires an external library, like OpenSSL, you may need to set some
 environment variables.
 
-       . /rust/set-cross-compile-env.sh
-       export OPENSSL_DIR=/usr/local/freebsd-12.2/usr
+       . /home/rust/set-cross-compile-env.sh
+       export OPENSSL_DIR=/usr/local/freebsd-12.3/usr
 
 3. Compile.
+   - For the x86_64 image:
 
-       cargo build --release --target i586-unknown-freebsd
+         cargo build --release --target x86_64-unknown-freebsd
+   - For the i686 image:
+
+         cargo build --release --target i686-unknown-freebsd
+   - For the i586 image:
+
+         cargo build --release --target i586-unknown-freebsd
 
 ## Building
 ### i686 and x86_64
 The `Dockerfile` is used for i686 and x86_64 images. It has two optional build args:
 * `ARCH`: The target architecture (i686 or x86_64). Default is x86_64.
-* `RUST_RELEASE`: The release of Rust to install. Default is 1.54.0.
+* `RUST_RELEASE`: The release of Rust to install. Default is 1.58.1.
 #### x86_64
     docker image build --tag rust-x86_64-freebsd .
 #### i686
