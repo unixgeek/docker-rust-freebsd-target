@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+# todo Document enabling IPv6 in Docker so that rust unit tests will run.
+
 git clone --depth 1 --branch 1.51.0-i586-freebsd --recurse-submodules https://github.com/unixgeek/rust.git
 
 mkdir dist
