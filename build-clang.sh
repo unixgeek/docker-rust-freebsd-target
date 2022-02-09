@@ -4,10 +4,11 @@ CLANG_RELEASE=10.0.1
 BUILD_DEPENDENCIES="build-essential python curl cmake ca-certificates"
 
 export DEBIAN_FRONTEND=noninteractive
+dpkg --add-architecture arm64
 apt-get update
 apt-get upgrade -y
 # shellcheck disable=SC2086
-apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES} libgcc-10-dev
+apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES} libgcc-10-dev libgcc-10-dev:arm64 libc6-dev:arm64
 
 # Download clang.
 mkdir -p /tmp/llvm/build /tmp/clang /tmp/lld
