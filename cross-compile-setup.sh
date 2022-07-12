@@ -9,8 +9,6 @@ apt-get update
 # shellcheck disable=SC2086
 apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES}
 
-# gcc-10-base:arm64?
-
 # Create cross compile wrapper scripts for clang.
 cat >> "/usr/local/bin/${CLANG_TRIPLE}-clang" <<EOF
 #!/bin/sh
