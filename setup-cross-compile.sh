@@ -1,35 +1,14 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
-if [ $# -ne 1 ]; then
-  echo "usage: $(basename "$0") TARGET(i586|i686|x86_64)"
-  exit 1
-fi
-
-set -x
-
-FREEBSD_RELEASE=12.3
-ARCH="${1}"
 CLANG_TRIPLE="${ARCH}-unknown-freebsd${FREEBSD_RELEASE}"
 RUSTC_TRIPLE="${ARCH}-unknown-freebsd"
 FREEBSD_BASE="/usr/local/freebsd-${FREEBSD_RELEASE}"
-BUILD_DEPENDENCIES="curl ca-certificates xz-utils"
-
-# Determine the arch for downloading the FreeBSD base system.
-case ${ARCH} in
-"i586") RELEASE_ARCH="i386";;
-"i686") RELEASE_ARCH="i386";;
-"x86_64") RELEASE_ARCH="amd64";;
-esac
+BUILD_DEPENDENCIES="curl xz-utils"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 # shellcheck disable=SC2086
 apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES}
-
-# Extract needed includes and libs from the FreeBSD base package.
-mkdir "${FREEBSD_BASE}"
-curl -L ftp://ftp.freebsd.org/pub/FreeBSD/releases/${RELEASE_ARCH}/${FREEBSD_RELEASE}-RELEASE/base.txz \
-  | tar -x -J -C "${FREEBSD_BASE}" ./usr/include ./usr/lib ./lib -f -
 
 # Create cross compile wrapper scripts for clang.
 cat >> "/usr/local/bin/${CLANG_TRIPLE}-clang" <<EOF
@@ -42,8 +21,8 @@ cat >> "/usr/local/bin/${CLANG_TRIPLE}-clang++" <<EOF
 EOF
 chmod 755 "/usr/local/bin/${CLANG_TRIPLE}-clang" "/usr/local/bin/${CLANG_TRIPLE}-clang++"
 
-groupadd -r rust
-useradd -m -r -g rust rust
+groupadd -r rust -g 2000
+useradd -m -r -g rust -u 2000 rust
 
 install_artifact() {
     ARTIFACT=$1
@@ -71,6 +50,8 @@ EOF
 else
   curl https://sh.rustup.rs -sSf | su rust -c "sh -s -- --default-toolchain ${RUST_RELEASE} -y"
   su rust -c ". /home/rust/.cargo/env; rustup target add ${RUSTC_TRIPLE}"
+  # Don't see a method to avoid installing this component.
+  su rust -c ". /home/rust/.cargo/env; rustup component remove rust-docs"
 fi
 
 # Set the linker for Cargo.
@@ -86,9 +67,11 @@ export CC_$(echo "${RUSTC_TRIPLE}" | sed s/-/_/g)=/usr/local/bin/${CLANG_TRIPLE}
 export CXX_$(echo "${RUSTC_TRIPLE}" | sed s/-/_/g)=/usr/local/bin/${CLANG_TRIPLE}-clang++
 EOF"
 
+
+chmod 777 /home/rust/.cargo
+
 # Cleanup
 # shellcheck disable=SC2086
-apt-get purge -y ${BUILD_DEPENDENCIES} python2
-apt autoremove --purge -y
-rm -fr /var/lib/apt/lists/*
+apt-get purge -y ${BUILD_DEPENDENCIES}
+apt-get autoremove --purge -y
 rm -f /tmp/cross-compile-setup.sh

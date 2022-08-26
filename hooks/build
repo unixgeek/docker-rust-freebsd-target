@@ -1,3 +1,7 @@
 #!/bin/sh
 
-docker build --build-arg ARCH=$ARCH --build-arg RUST_RELEASE=$RUST_RELEASE -f $DOCKERFILE_PATH -t $IMAGE_NAME .
+docker buildx build \
+    --build-arg ARCH="${ARCH}" \
+    --build-arg RUST_RELEASE="${RUST_RELEASE}" \
+    --file "${DOCKERFILE_PATH}" \
+    --tag "${IMAGE_NAME}" .
