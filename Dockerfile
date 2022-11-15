@@ -3,9 +3,6 @@ FROM debian:bullseye-slim
 ARG RUST_RELEASE=1.62.0
 ARG GITHUB_KEY=github
 
-COPY build-clang.sh /tmp
-RUN /tmp/build-clang.sh
-
 COPY cross-compile-setup.sh /tmp
 RUN /tmp/cross-compile-setup.sh
 
@@ -17,7 +14,7 @@ RUN apt-get update -y \
     && mkdir -p /usr/share/man/man1 \
     && dpkg --add-architecture arm64 \
     && apt-get update \
-    && apt-get install -y git ssh librust-openssl-dev:arm64 \
+    && apt-get install -y git ssh musl-tools:arm64 \
     && chmod 0600 /home/rust/.ssh/${GITHUB_KEY} \
     && chown rust:rust /home/rust/.ssh/${GITHUB_KEY} /home/rust/compile.sh \
     && chmod 700 /home/rust/compile.sh

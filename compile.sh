@@ -8,4 +8,4 @@ export OPENSSL_INCLUDE_DIR=/usr/include/openssl
 export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu
 cd /mnt/
 cargo clean
-cargo build --release --target aarch64-unknown-linux-gnu
+cargo build --release --target aarch64-unknown-linux-musl
