@@ -35,11 +35,9 @@ install_artifact() {
 # For i586, use the custom toolchain and target.
 if [ "${ARCH}" = "i586" ]; then
   install_artifact https://f004.backblazeb2.com/file/rust-freebsd/cargo-1.51.0-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/clippy-1.51.0-x86_64-unknown-linux-gnu.tar.xz
   install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rust-std-1.51.0-i586-unknown-freebsd.tar.xz
   install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rust-std-1.51.0-x86_64-unknown-linux-gnu.tar.xz
   install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rustc-1.51.0-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rustfmt-1.51.0-x86_64-unknown-linux-gnu.tar.xz
   chown -R rust:rust /home/rust/.x86_64-unknown-linux-gnu-patched
   su rust <<EOF
   curl https://sh.rustup.rs -sSf | /bin/sh -s -- --default-toolchain none -y
@@ -48,10 +46,8 @@ if [ "${ARCH}" = "i586" ]; then
   rustup default x86_64-unknown-linux-gnu-patched
 EOF
 else
-  curl https://sh.rustup.rs -sSf | su rust -c "sh -s -- --default-toolchain ${RUST_RELEASE} -y"
+  curl https://sh.rustup.rs -sSf | su rust -c "sh -s -- --default-toolchain ${RUST_RELEASE} --profile minimal -y"
   su rust -c ". /home/rust/.cargo/env; rustup target add ${RUSTC_TRIPLE}"
-  # Don't see a method to avoid installing this component.
-  su rust -c ". /home/rust/.cargo/env; rustup component remove rust-docs"
 fi
 
 # Set the linker for Cargo.
