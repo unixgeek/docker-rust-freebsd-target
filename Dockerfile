@@ -1,4 +1,4 @@
-FROM debian:bullseye-20221024-slim
+FROM debian:bullseye-20221205-slim
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     /tmp/install-freebsd.sh
 
-ARG RUST_RELEASE=1.65.0
+ARG RUST_RELEASE=1.66.0
 
 COPY setup-cross-compile.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
