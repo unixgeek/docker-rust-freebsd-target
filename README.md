@@ -1,4 +1,4 @@
-# Docker Rust FreeBSD Target
+# Docker Rust FreeBSD Target ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/unixgeek2/rust-x86_64-freebsd)
 This Docker image is used to cross compile Rust for FreeBSD.
 
 ## Usage
@@ -37,6 +37,10 @@ This example works out of the box in a run step with the ubuntu runner.
     ENV OPENSSL_DIR=/usr/local/freebsd-13.1/usr
     ENTRYPOINT ["/bin/sh", "-c"]
 
+## Docker Hub
+* [x86_64](https://hub.docker.com/r/unixgeek2/rust-x86_64-freebsd)
+* [i686](https://hub.docker.com/r/unixgeek2/rust-i686-freebsd)
+* [i586](https://hub.docker.com/r/unixgeek2/rust-i586-freebsd)
 ## Building
 There are two optional build args:
 * `ARCH`: The target architecture (i586, i686 or x86_64). Default is x86_64.
