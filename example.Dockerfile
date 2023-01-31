@@ -1,4 +1,4 @@
-FROM unixgeek2/rust-x86_64-freebsd:rust-1.66.0
+FROM unixgeek2/rust-x86_64-freebsd:latest
 
 USER root
 RUN apt-get update \

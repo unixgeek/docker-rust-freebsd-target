@@ -7,7 +7,7 @@ In the directory containing your project run:
 
     docker container run --rm --volume "$(pwd)":/src     \
         --init --tty --user "$(id --user):$(id --group)" \
-        "unixgeek2/rust-x86_64-freebsd:rust-1.66.0"      \
+        "unixgeek2/rust-x86_64-freebsd:latest"      \
         build --release --target x86_64-unknown-freebsd
 
 If you need to provide environment variables for linking to external libraries, like OpenSSL, then use the `--env` parameter.
@@ -15,7 +15,7 @@ If you need to provide environment variables for linking to external libraries, 
     docker container run --rm --volume "$(pwd)":/src     \
         --init --tty --user "$(id --user):$(id --group)" \
         --env OPENSSL_DIR=/usr/local/freebsd-13.1/usr    \
-        "unixgeek2/rust-x86_64-freebsd:rust-1.66.0"      \
+        "unixgeek2/rust-x86_64-freebsd:latest"      \
         build --release --target x86_64-unknown-freebsd
 
 ### GitHub Action Example
@@ -25,11 +25,11 @@ This example works out of the box in a run step with the ubuntu runner.
         --volume ${{ github.workspace }}:/src
         --user $(id --user):$(id --group)
         --env OPENSSL_DIR=/usr/local/freebsd-13.1/usr
-        unixgeek2/rust-x86_64-freebsd:rust-1.66.0 build --release --target x86_64-unknown-freebsd
+        unixgeek2/rust-x86_64-freebsd:latest build --release --target x86_64-unknown-freebsd
 
 ### Using as a Base Image
 
-    FROM unixgeek2/rust-x86_64-freebsd:rust-1.66.0
+    FROM unixgeek2/rust-x86_64-freebsd:latest
     USER root
     RUN apt-get update \
         && apt-get install --no-install-recommends -y libssl-dev
