@@ -18,7 +18,7 @@ apt-get install -y --no-install-recommends ${BUILD_DEPENDENCIES}
 
 # Extract needed includes and libs from the FreeBSD base package.
 mkdir "${FREEBSD_BASE}"
-curl -L "ftp://ftp.freebsd.org/pub/FreeBSD/releases/${RELEASE_ARCH}/${FREEBSD_RELEASE}-RELEASE/base.txz" \
+curl -L "https://download.freebsd.org/ftp/releases/${RELEASE_ARCH}/${FREEBSD_RELEASE}-RELEASE/base.txz" \
   | tar -x -J -C "${FREEBSD_BASE}" ./usr/include ./usr/lib ./lib -f -
 
 # Cleanup
