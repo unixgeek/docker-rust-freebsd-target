@@ -1,7 +1,0 @@
-#!/bin/sh
-
-docker buildx build \
-    --build-arg ARCH="${ARCH}" \
-    --build-arg RUST_RELEASE="${RUST_RELEASE}" \
-    --file "${DOCKERFILE_PATH}" \
-    --tag "${IMAGE_NAME}" .
