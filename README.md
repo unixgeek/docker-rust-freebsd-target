@@ -14,7 +14,7 @@ If you need to provide environment variables for linking to external libraries, 
 ```shell
     docker container run --rm --volume "$(pwd)":/src     \
         --init --tty --user "$(id --user):$(id --group)" \
-        --env OPENSSL_DIR=/usr/local/freebsd-13.1/usr    \
+        --env OPENSSL_DIR=/usr/local/freebsd-13.2/usr    \
         "unixgeek2/rust-x86_64-freebsd:latest"      \
         build --release --target x86_64-unknown-freebsd
 ```
@@ -24,7 +24,7 @@ This example works out of the box in a run step with the ubuntu runner.
     docker container run --rm
         --volume ${{ github.workspace }}:/src
         --user $(id --user):$(id --group)
-        --env OPENSSL_DIR=/usr/local/freebsd-13.1/usr
+        --env OPENSSL_DIR=/usr/local/freebsd-13.2/usr
         unixgeek2/rust-x86_64-freebsd:latest build --release --target x86_64-unknown-freebsd
 ```
 ### Using as a Base Image
@@ -34,7 +34,7 @@ USER root
 RUN apt-get update \
     && apt-get install --no-install-recommends -y libssl-dev
 USER rust
-ENV OPENSSL_DIR=/usr/local/freebsd-13.1/usr
+ENV OPENSSL_DIR=/usr/local/freebsd-13.2/usr
 ENTRYPOINT ["/bin/sh", "-c"]
 ```
 ## Docker Hub

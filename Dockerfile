@@ -10,6 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY build-clang.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    --mount=type=cache,target=/root/.ccache \
     /tmp/build-clang.sh
 
 ARG ARCH=x86_64
@@ -35,6 +36,3 @@ COPY docker-entrypoint.sh /home/rust/
 WORKDIR /src
 ENTRYPOINT ["/home/rust/docker-entrypoint.sh"]
 CMD ["help"]
-
-# todo dive and hadolint this shit.
-# todo is clang really necessary? maybe start by adding cargo/rustc target
