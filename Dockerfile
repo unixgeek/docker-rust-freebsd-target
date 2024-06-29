@@ -1,4 +1,4 @@
-FROM debian:bookworm-20240110-slim
+FROM debian:bookworm-20240612-slim
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -17,14 +17,14 @@ ARG ARCH=x86_64
 
 # Arbitrary versions aren't supported, but might still work. I don't fully understand cross-compilation...
 # Required by the setup-cross-compile and install-freebsd scripts.
-ARG FREEBSD_RELEASE=13.2
+ARG FREEBSD_RELEASE=13.3
 
 COPY install-freebsd.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     /tmp/install-freebsd.sh
 
-ARG RUST_RELEASE=1.75.0
+ARG RUST_RELEASE=1.79.0
 
 COPY setup-cross-compile.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -33,6 +33,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 USER rust
 COPY docker-entrypoint.sh /home/rust/
+ENV OPENSSL_DIR=/usr/local/freebsd-${FREEBSD_RELEASE}/usr
 WORKDIR /src
 ENTRYPOINT ["/home/rust/docker-entrypoint.sh"]
 CMD ["help"]

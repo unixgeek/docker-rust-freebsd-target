@@ -51,7 +51,7 @@ else
 fi
 
 # Set the linker for Cargo.
-su rust -c "cat >> /home/rust/.cargo/config <<EOF
+su rust -c "cat >> /home/rust/.cargo/config.toml <<EOF
 [target.${RUSTC_TRIPLE}]
 linker = \"/usr/local/bin/${CLANG_TRIPLE}-clang\"
 EOF"
@@ -62,7 +62,6 @@ su rust -c "cat >> /home/rust/set-cross-compile-env.sh <<EOF
 export CC_$(echo "${RUSTC_TRIPLE}" | sed s/-/_/g)=/usr/local/bin/${CLANG_TRIPLE}-clang
 export CXX_$(echo "${RUSTC_TRIPLE}" | sed s/-/_/g)=/usr/local/bin/${CLANG_TRIPLE}-clang++
 EOF"
-
 
 chmod 777 /home/rust/.cargo
 
