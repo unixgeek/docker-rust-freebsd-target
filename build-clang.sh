@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 # When changing this, update the /usr/bin/cc symlink at the end of the script.
-CLANG_RELEASE=17.0.6
-BUILD_DEPENDENCIES="build-essential python3 curl cmake ccache git ninja-build"
+CLANG_RELEASE=18.1.6
+BUILD_DEPENDENCIES="build-essential python3 curl cmake ccache git ninja-build zlib1g-dev"
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
@@ -49,4 +49,4 @@ rm -f /tmp/build-clang.sh
 
 # Set some symlinks.
 ln -s /usr/local/bin/ld.lld /usr/bin/ld
-ln -s /usr/local/bin/clang-17 /usr/bin/cc
+ln -s /usr/local/bin/clang-18 /usr/bin/cc
