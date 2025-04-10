@@ -40,7 +40,10 @@ if [ "${ARCH}" = "i586" ]; then
   install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rustc-1.51.0-x86_64-unknown-linux-gnu.tar.xz
   chown -R rust:rust /home/rust/.x86_64-unknown-linux-gnu-patched
   su rust <<EOF
-  curl https://sh.rustup.rs -sSf | /bin/sh -s -- --default-toolchain none -y
+  curl -o /tmp/rustup-init https://static.rust-lang.org/rustup/archive/1.23.1/x86_64-unknown-linux-gnu/rustup-init
+  chmod u+x /tmp/rustup-init
+  /tmp/rustup-init --default-toolchain none -y
+  rm /tmp/rustup-init
   . /home/rust/.cargo/env
   rustup toolchain link x86_64-unknown-linux-gnu-patched /home/rust/.x86_64-unknown-linux-gnu-patched
   rustup default x86_64-unknown-linux-gnu-patched
@@ -69,4 +72,4 @@ chmod 777 /home/rust/.cargo
 # shellcheck disable=SC2086
 apt-get purge -y ${BUILD_DEPENDENCIES}
 apt-get autoremove --purge -y
-rm -f /tmp/cross-compile-setup.sh
+rm -f /tmp/setup-cross-compile.sh
