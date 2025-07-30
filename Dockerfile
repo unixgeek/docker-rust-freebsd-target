@@ -1,4 +1,4 @@
-FROM debian:bookworm-20250428-slim
+FROM debian:bookworm-20250721-slim
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -17,14 +17,14 @@ ARG ARCH=x86_64
 
 # Arbitrary versions aren't supported, but might still work. I don't fully understand cross-compilation...
 # Required by the setup-cross-compile and install-freebsd scripts.
-ARG FREEBSD_RELEASE=14.2
+ARG FREEBSD_RELEASE=14.3
 
 COPY install-freebsd.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     /tmp/install-freebsd.sh
 
-ARG RUST_RELEASE=1.86.0
+ARG RUST_RELEASE=1.88.0
 
 COPY setup-cross-compile.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
