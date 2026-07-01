@@ -14,9 +14,16 @@ for ARCH in ${ARCHES}; do
     TAG="unixgeek2/rust-${ARCH}-freebsd:rust-1.${RELEASE}"
     echo "${TAG}"
     docker buildx build --progress tty \
+                        --sbom=true --provenance=mode=max \
                         --build-arg ARCH="${ARCH}" \
                         --build-arg RUST_RELEASE="1.${RELEASE}" \
+                        --push \
                         --tag "${TAG}" .
   done
-  docker image tag "unixgeek2/rust-${ARCH}-freebsd:rust-${LATEST}" "unixgeek2/rust-${ARCH}-freebsd:latest"
+  docker buildx build --progress tty \
+                      --sbom=true --provenance=mode=max \
+                      --build-arg ARCH="${ARCH}" \
+                      --build-arg RUST_RELEASE="${LATEST}" \
+                      --push \
+                      --tag "unixgeek2/rust-${ARCH}-freebsd:latest" .
 done
