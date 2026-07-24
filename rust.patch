@@ -1,0 +1,92 @@
+diff --git a/compiler/rustc_target/src/spec/mod.rs b/compiler/rustc_target/src/spec/mod.rs
+index d6a9e27c465..65936ba7178 100644
+--- a/compiler/rustc_target/src/spec/mod.rs
++++ b/compiler/rustc_target/src/spec/mod.rs
+@@ -1530,6 +1530,7 @@ fn $module() {
+     ("aarch64-unknown-freebsd", aarch64_unknown_freebsd),
+     ("armv6-unknown-freebsd", armv6_unknown_freebsd),
+     ("armv7-unknown-freebsd", armv7_unknown_freebsd),
++    ("i586-unknown-freebsd", i586_unknown_freebsd),
+     ("i686-unknown-freebsd", i686_unknown_freebsd),
+     ("powerpc-unknown-freebsd", powerpc_unknown_freebsd),
+     ("powerpc64-unknown-freebsd", powerpc64_unknown_freebsd),
+diff --git a/compiler/rustc_target/src/spec/targets/i586_unknown_freebsd.rs b/compiler/rustc_target/src/spec/targets/i586_unknown_freebsd.rs
+new file mode 100644
+index 00000000000..b7e17ff6b58
+--- /dev/null
++++ b/compiler/rustc_target/src/spec/targets/i586_unknown_freebsd.rs
+@@ -0,0 +1,25 @@
++use crate::spec::{Arch, Cc, LinkerFlavor, Lld, StackProbeType, Target, TargetMetadata, base};
++
++pub(crate) fn target() -> Target {
++    let mut base = base::freebsd::opts();
++    base.cpu = "pentium".into();
++    base.max_atomic_width = Some(64);
++    base.add_pre_link_args(LinkerFlavor::Gnu(Cc::Yes, Lld::No), &["-m32", "-Wl,-znotext"]);
++    base.stack_probes = StackProbeType::Inline;
++
++    Target {
++        llvm_target: "i586-unknown-freebsd".into(),
++        metadata: TargetMetadata {
++            description: Some("32-bit FreeBSD".into()),
++            tier: Some(2),
++            host_tools: Some(false),
++            std: Some(true),
++        },
++        pointer_width: 32,
++        data_layout: "e-m:e-p:32:32-p270:32:32-p271:32:32-p272:64:64-\
++            i128:128-f64:32:64-f80:32-n8:16:32-S128"
++            .into(),
++        arch: Arch::X86,
++        options: base,
++    }
++}
+diff --git a/src/ci/docker/host-x86_64/dist-various-2/Dockerfile b/src/ci/docker/host-x86_64/dist-various-2/Dockerfile
+index f07fb91edaf..ee2b79b471b 100644
+--- a/src/ci/docker/host-x86_64/dist-various-2/Dockerfile
++++ b/src/ci/docker/host-x86_64/dist-various-2/Dockerfile
+@@ -60,6 +60,9 @@ ENV \
+     CXX_wasm32_unknown_unknown=clang++-11 \
+     CC_wasm32v1_none=clang-11 \
+     CXX_wasm32v1_none=clang++-11 \
++    AR_i586_unknown_freebsd=i686-unknown-freebsd14-ar \
++    CC_i586_unknown_freebsd=i686-unknown-freebsd14-clang \
++    CXX_i586_unknown_freebsd=i686-unknown-freebsd14-clang++ \
+     CC=gcc-9 \
+     CXX=g++-9
+ 
+@@ -89,6 +92,7 @@ RUN curl -L https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-3
+ ENV WASI_SDK_PATH=/tmp/wasi-sdk-33.0-x86_64-linux
+ 
+ COPY scripts/freebsd-toolchain.sh /tmp/
++RUN /tmp/freebsd-toolchain.sh i586
+ RUN /tmp/freebsd-toolchain.sh i686
+ 
+ COPY scripts/sccache.sh /scripts/
+@@ -115,6 +119,7 @@ ENV TARGETS=$TARGETS,x86_64-fortanix-unknown-sgx
+ ENV TARGETS=$TARGETS,nvptx64-nvidia-cuda
+ ENV TARGETS=$TARGETS,armv7-unknown-linux-gnueabi
+ ENV TARGETS=$TARGETS,armv7-unknown-linux-musleabi
++ENV TARGETS=$TARGETS,i586-unknown-freebsd
+ ENV TARGETS=$TARGETS,i686-unknown-freebsd
+ ENV TARGETS=$TARGETS,x86_64-unknown-none
+ ENV TARGETS=$TARGETS,aarch64-unknown-uefi
+@@ -140,3 +145,5 @@ ENV RUST_CONFIGURE_ARGS="--enable-extended --enable-lld --enable-llvm-bitcode-li
+   --musl-root-riscv64gc=/musl-riscv64gc"
+ 
+ ENV SCRIPT="python3 ../x.py dist --host= --target $TARGETS && python3 ../x.py dist --host= --set build.sanitizers=true --target $TARGETS_SANITIZERS"
++
++ENV BOOTSTRAP_SKIP_TARGET_SANITY=1
+\ No newline at end of file
+diff --git a/src/ci/docker/scripts/freebsd-toolchain.sh b/src/ci/docker/scripts/freebsd-toolchain.sh
+index 8b4081d27d0..8c6c7f86a39 100755
+--- a/src/ci/docker/scripts/freebsd-toolchain.sh
++++ b/src/ci/docker/scripts/freebsd-toolchain.sh
+@@ -45,6 +45,7 @@ rm -rf binutils
+ mkdir -p "$sysroot"
+ case $arch in
+   (x86_64) freebsd_arch=amd64 ;;
++  (i586) freebsd_arch=i386 ;;
+   (i686) freebsd_arch=i386 ;;
+   (aarch64) freebsd_arch=arm64 ;;
+ esac

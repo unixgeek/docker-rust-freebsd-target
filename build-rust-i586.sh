@@ -1,25 +1,16 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
-git clone --depth 1 --branch 1.51.0-i586-freebsd --recurse-submodules https://github.com/unixgeek/rust.git
+if [ $# -ne 2 ]; then
+  echo "usage: $(basename "${0}") RUST_RELEASE"
+  exit 1
+fi
+RUST_RELEASE="${1}"
 
-mkdir dist
+git clone --depth 1 --shallow-submodules --recurse-submodules --branch "${RUST_RELEASE}" git@github.com:rust-lang/rust.git
 
 cd rust
 
-# Won't work on certain kernels: https://github.com/moby/moby/issues/28705#issuecomment-262226229
-./src/ci/docker/run.sh dist-x86_64-linux
+patch --strip 1 --input ../rust.patch
 
-mv obj/build/dist/cargo-1.51.0-x86_64-unknown-linux-gnu.tar.xz ../dist
-mv obj/build/dist/clippy-1.51.0-x86_64-unknown-linux-gnu.tar.xz ../dist
-mv obj/build/dist/rust-std-1.51.0-x86_64-unknown-linux-gnu.tar.xz ../dist
-mv obj/build/dist/rustc-1.51.0-x86_64-unknown-linux-gnu.tar.xz ../dist
-mv obj/build/dist/rustfmt-1.51.0-x86_64-unknown-linux-gnu.tar.xz ../dist
-
-# Rust docs advise on cleaning this directory between builds.
-rm -fr obj/*
-
-./src/ci/docker/run.sh dist-various-2
-
-mv obj/build/dist/rust-std-1.51.0-i586-unknown-freebsd.tar.xz ../dist
-
-cd ../
+cargo run --manifest-path src/ci/citool/Cargo.toml run-local dist-x86_64-linux
+cargo run --manifest-path src/ci/citool/Cargo.toml run-local dist-various-2

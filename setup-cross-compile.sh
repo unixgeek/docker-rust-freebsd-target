@@ -26,24 +26,21 @@ useradd -m -r -g rust -u 2000 rust
 
 install_artifact() {
     ARTIFACT=$1
-    curl "${ARTIFACT}" | tar -x -J -f -
+    tar -x -J -f /tmp/rust-obj/"${ARTIFACT}"
     DIR=$(basename "${ARTIFACT}" | sed 's/\.tar\.xz//')
-    "${DIR}"/./install.sh --prefix=/home/rust/.x86_64-unknown-linux-gnu-patched/
+    "${DIR}"/install.sh --prefix=/home/rust/.x86_64-unknown-linux-gnu-patched/
     rm -fr "${DIR}"
 }
 
 # For i586, use the custom toolchain and target.
 if [ "${ARCH}" = "i586" ]; then
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/cargo-1.51.0-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rust-std-1.51.0-i586-unknown-freebsd.tar.xz
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rust-std-1.51.0-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact https://f004.backblazeb2.com/file/rust-freebsd/rustc-1.51.0-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact dist-x86_64-linux/build/dist/cargo-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact dist-x86_64-linux/build/dist/rustc-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact dist-x86_64-linux/build/dist/rust-std-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact dist-various-2/build/dist/rust-std-"${RUST_RELEASE}"-i586-unknown-freebsd.tar.xz
   chown -R rust:rust /home/rust/.x86_64-unknown-linux-gnu-patched
   su rust <<EOF
-  curl -o /tmp/rustup-init https://static.rust-lang.org/rustup/archive/1.23.1/x86_64-unknown-linux-gnu/rustup-init
-  chmod u+x /tmp/rustup-init
-  /tmp/rustup-init --default-toolchain none -y
-  rm /tmp/rustup-init
+  curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain none -y
   . /home/rust/.cargo/env
   rustup toolchain link x86_64-unknown-linux-gnu-patched /home/rust/.x86_64-unknown-linux-gnu-patched
   rustup default x86_64-unknown-linux-gnu-patched

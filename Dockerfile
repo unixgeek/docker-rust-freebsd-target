@@ -24,11 +24,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     /tmp/install-freebsd.sh
 
-ARG RUST_RELEASE=1.96.0
+ARG RUST_RELEASE=1.97.1
 
 COPY setup-cross-compile.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    --mount=type=bind,source=rust/obj,target=/tmp/rust-obj \
     /tmp/setup-cross-compile.sh
 
 USER rust
