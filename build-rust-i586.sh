@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 1 ]; then
   echo "usage: $(basename "${0}") RUST_RELEASE"
   exit 1
 fi

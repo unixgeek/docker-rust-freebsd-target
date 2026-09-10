@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-RUST_RELEASES=(97.1)
+RUST_RELEASES=(98.1)
 LATEST=1.${RUST_RELEASES[$((${#RUST_RELEASES[@]} - 1))]}
 ARCHES="x86_64 i686 i586"
 
