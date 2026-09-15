@@ -21,8 +21,7 @@ cat >> "/usr/local/bin/${CLANG_TRIPLE}-clang++" <<EOF
 EOF
 chmod 755 "/usr/local/bin/${CLANG_TRIPLE}-clang" "/usr/local/bin/${CLANG_TRIPLE}-clang++"
 
-groupadd -r rust -g 2000
-useradd -m -r -g rust -u 2000 rust
+useradd --create-home rust
 
 install_artifact() {
     ARTIFACT=$1
