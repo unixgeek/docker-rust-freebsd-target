@@ -17,7 +17,7 @@ ARG ARCH=x86_64
 
 # Arbitrary versions aren't supported, but might still work. I don't fully understand cross-compilation...
 # Required by the setup-cross-compile and install-freebsd scripts.
-ARG FREEBSD_RELEASE=14.4
+ARG FREEBSD_RELEASE=14.5
 
 COPY install-freebsd.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
