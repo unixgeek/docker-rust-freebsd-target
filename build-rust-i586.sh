@@ -14,3 +14,9 @@ patch --strip 1 --input ../rust.patch
 
 cargo run --manifest-path src/ci/citool/Cargo.toml run-local dist-x86_64-linux
 cargo run --manifest-path src/ci/citool/Cargo.toml run-local dist-various-2
+
+mkdir ../rust-dist
+cp obj/dist-x86_64-linux/build/dist/cargo-*-x86_64-unknown-linux-gnu.tar.xz ../rust-dist
+cp obj/dist-x86_64-linux/build/dist/rustc-*-x86_64-unknown-linux-gnu.tar.xz ../rust-dist
+cp obj/dist-x86_64-linux/build/dist/rust-std-*-x86_64-unknown-linux-gnu.tar.xz ../rust-dist
+cp obj/dist-various-2/build/dist/rust-std-*-i586-unknown-freebsd.tar.xz ../rust-dist

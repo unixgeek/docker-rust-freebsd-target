@@ -33,10 +33,10 @@ install_artifact() {
 
 # For i586, use the custom toolchain and target.
 if [ "${ARCH}" = "i586" ]; then
-  install_artifact dist-x86_64-linux/build/dist/cargo-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact dist-x86_64-linux/build/dist/rustc-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact dist-x86_64-linux/build/dist/rust-std-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
-  install_artifact dist-various-2/build/dist/rust-std-"${RUST_RELEASE}"-i586-unknown-freebsd.tar.xz
+  install_artifact cargo-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact rustc-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact rust-std-"${RUST_RELEASE}"-x86_64-unknown-linux-gnu.tar.xz
+  install_artifact rust-std-"${RUST_RELEASE}"-i586-unknown-freebsd.tar.xz
   chown -R rust:rust /home/rust/.x86_64-unknown-linux-gnu-patched
   su rust <<EOF
   curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain none -y

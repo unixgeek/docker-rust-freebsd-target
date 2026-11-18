@@ -45,6 +45,6 @@ docker buildx build --build-arg ARCH=i686 --tag rust-i686-freebsd .
 ```
 ### i586
 ```shell
-./build-rust-i586.sh 1.97.1
-docker buildx build --build-arg ARCH=i586 --build-arg RUST_RELEASE=1.97.1 --tag rust-i586-freebsd .
+./build-rust-i586.sh 1.00.0
+docker buildx build --build-arg ARCH=i586 --build-arg RUST_RELEASE=1.100.0 --tag rust-i586-freebsd .
 ```
