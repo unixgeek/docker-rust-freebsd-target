@@ -1,11 +1,11 @@
-FROM debian:bookworm-20260824-slim
+FROM debian:trixie-slim
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     rm -f /etc/apt/apt.conf.d/docker-clean \
     && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache \
     && apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates libgcc-11-dev
+    && apt-get install -y --no-install-recommends ca-certificates libgcc-14-dev
 
 COPY build-clang.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -24,12 +24,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     /tmp/install-freebsd.sh
 
-ARG RUST_RELEASE=1.98.1
+ARG RUST_RELEASE=1.100.0
 
 COPY setup-cross-compile.sh /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    --mount=type=bind,source=rust/obj,target=/tmp/rust-obj \
+    --mount=type=bind,source=rust-dist,target=/tmp/rust-obj \
     /tmp/setup-cross-compile.sh
 
 USER rust
